@@ -27,9 +27,27 @@
                 </a>
               </li>
                 <li class="nav-item">
-                    <a href="/ejercicio7.1" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'ejercicio7.1' ? 'active' : ''; ?>">
+                    <a href="/trabajadores1" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores1' ? 'active' : ''; ?>">
                         <i class="fas fa-laptop-code nav-icon"></i>
-                        <p>Ejercicio 7.1</p>
+                        <p>Trabajadores 1</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/trabajadores2" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores2' ? 'active' : ''; ?>">
+                        <i class="fas fa-laptop-code nav-icon"></i>
+                        <p>Trabajadores 2</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/trabajadores3" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores3' ? 'active' : ''; ?>">
+                        <i class="fas fa-laptop-code nav-icon"></i>
+                        <p>Trabajadores 3</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/trabajadores4" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores4' ? 'active' : ''; ?>">
+                        <i class="fas fa-laptop-code nav-icon"></i>
+                        <p>Trabajadores 4</p>
                     </a>
                 </li>
             </ul>

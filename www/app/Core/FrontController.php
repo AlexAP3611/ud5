@@ -2,8 +2,6 @@
 
 namespace Com\Daw2\Core;
 
-use Com\Daw2\Controllers\ErroresController;
-use Com\Daw2\Controllers\InicioController;
 use Steampixel\Route;
 
 class FrontController
@@ -13,7 +11,7 @@ class FrontController
         Route::add(
             '/',
             function () {
-                $controlador = new InicioController();
+                $controlador = new \Com\Daw2\Controllers\InicioController();
                 $controlador->index();
             },
             'get'
@@ -22,16 +20,40 @@ class FrontController
         Route::add(
             '/demo-proveedores',
             function () {
-                $controlador = new InicioController();
+                $controlador = new \Com\Daw2\Controllers\InicioController();
                 $controlador->demo();
             },
             'get'
         );
         Route::add(
-            '/ejercicio7.1',
+            '/trabajadores1',
             function () {
-                $controlador = new TrabajadoresController();
-                $controlador->ejercicio71();
+                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador->trabajadores1();
+            },
+            'get'
+        );
+        Route::add(
+            '/trabajadores2',
+            function () {
+                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador->trabajadores2();
+            },
+            'get'
+        );
+        Route::add(
+            '/trabajadores3',
+            function () {
+                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador->trabajadores3();
+            },
+            'get'
+        );
+        Route::add(
+            '/trabajadores4',
+            function () {
+                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador->trabajadores4();
             },
             'get'
         );
