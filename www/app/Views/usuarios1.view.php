@@ -25,7 +25,10 @@
                                     <?php
                                     foreach ($roles as $rol) {
                                         ?>
-                                        <option value="<?php echo $rol['id_rol'] ?>"> <?php echo isset($input['id_rol']) && $input['id_rol'] == $rol['id_rol'] ? 'selected' : '' ?><?php echo ucfirst($rol['nombre_rol']) ?></option>
+                                        <option
+                                                value="<?php echo $rol['id_rol'] ?>" <?php echo isset($_GET['id_rol']) && $_GET['id_rol'] == $rol['id_rol'] ? 'selected' : ''; ?>>
+                                            <?php echo ucfirst($rol['nombre_rol']) ?>
+                                        </option>
                                         <?php
                                     }
                                     ?>

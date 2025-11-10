@@ -21,7 +21,11 @@ class UsuariosModel extends BaseDbModel
             $sql .= " WHERE trabajador.id_rol = :id_rol";
             $statement = $this->pdo->prepare($sql);
             $statement->execute(['username' => '%' . $filters['username'] . '%']);
-        } elseif (!empty) {
+        } elseif (!empty($filters['id_rol'])) {
+            $sql .= " WHERE trabajadores.id_rol = :id_rol";
+            $statement = $this->pdo->prepare($sql);
+            $statement->execute(['id_rol' => $filters['id_rol']]);
+        } else {
             $statement = $this->pdo->query($sql);
         }
         return $statement->fetchAll();
