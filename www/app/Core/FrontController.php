@@ -57,7 +57,22 @@ class FrontController
             },
             'get'
         );
-
+        Route::add(
+            '/trabajadores5',
+            function () {
+                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador->trabajadores5();
+            },
+            'get'
+        );
+        Route::add(
+            '/usuarios1',
+            function () {
+                $controlador = new \Com\Daw2\Controllers\UsuariosController();
+                $controlador->usuarios1();
+            },
+            'get'
+        );
         Route::pathNotFound(
             function () {
                 $controller = new ErroresController();

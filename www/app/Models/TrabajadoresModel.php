@@ -44,4 +44,9 @@ class TrabajadoresModel extends BaseDbModel
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll();
     }
+    public function getConFiltros(){
+
+    }
+
+
 }

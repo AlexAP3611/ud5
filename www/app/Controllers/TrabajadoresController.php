@@ -60,4 +60,16 @@ class TrabajadoresController extends BaseController
 
         $this->view->showViews(array('templates/header.view.php', 'trabajadores4.view.php', 'templates/footer.view.php'), $data);
     }
+    public function trabajadores5(){
+        $model = new TrabajadoresModel();
+        $trabajadores = $model->getConFiltros();
+
+        $data = [
+            'titulo' => 'Trabajadores cuyo nombre de usuario empieza por Carlos',
+            'trabajadores' => $trabajadores
+        ];
+        $this->view->showViews(array('templates/header.view.php', 'trabajadores4.view.php', 'templates/footer.view.php'), $data);
+    }
+
+
 }
