@@ -20,12 +20,15 @@
                         <div class="col-12 col-lg-4">
                             <div class="mb-3">
                                 <label for="id_rol">Rol:</label>
-                                <select name="id_rol" id="id_rol" class="form-control" data-placeholder="Rol">
+                                <select name="id_rol" id="id_rol" class="form-control select2" data-placeholder="Rol">
                                     <option value="">-</option>
                                     <?php
                                     foreach ($roles as $rol) {
                                         ?>
-                                        <option value="<?php echo $rol['id_rol'] ?>"><?php echo ucfirst($rol['nombre_rol']) ?></option>
+                                        <option
+                                                value="<?php echo $rol['id_rol'] ?>" <?php echo isset($_GET['id_rol']) && $_GET['id_rol'] == $rol['id_rol'] ? 'selected' : ''; ?>>
+                                            <?php echo ucfirst($rol['nombre_rol']) ?>
+                                        </option>
                                         <?php
                                     }
                                     ?>
@@ -58,6 +61,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-lg-4">
+                            <div class="form-group">
+                                <label for="countries">Países:</label>
+                                <select name="countries[]" id="countries" class="form-control select2" multiple>
+                                    <option value="">-</option>
+                                    <?php foreach ($countries as $country) {
+                                        ?>
+                                        <option value="<?php echo $country['id'] ?>"><?php echo ucfirst($country['country_name']); ?></option>
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                                <p class="text-error small"><?php echo $errors['countries'] ?? ''; ?></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer">
@@ -82,11 +100,11 @@
                 <table id="tabladatos" class="table table-striped table-bordered">
                     <thead>
                     <tr>
-                        <th>Nombre de usuario</th>
-                        <th>Salario</th>
-                        <th>IRPF</th>
-                        <th>Nacionalidad</th>
-                        <th>Rol</th>
+                        <th><a href="#">Nombre de usuario</a></th>
+                        <th><a href="#" onclick=TrabajadoresModel>Salario</a></th>
+                        <th><a href="#">IRPF</a></th>
+                        <th><a href="#">Nacionalidad</a></th>
+                        <th><a href="#">Rol</a></th>
                     </tr>
                     </thead>
                     <tbody>

@@ -61,7 +61,7 @@ class FrontController
             '/trabajadores5',
             function () {
                 $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
-                $controlador->trabajadores5();
+                $controlador->getByFilters();
             },
             'get'
         );
