@@ -1,7 +1,9 @@
 <?php
 
 namespace Com\Daw2\Core;
-
+use Com\Daw2\Controllers\ErroresController;
+use Com\Daw2\Controllers\InicioController;
+use Com\Daw2\Controllers\TrabajadoresController;
 use Steampixel\Route;
 
 class FrontController
@@ -66,10 +68,10 @@ class FrontController
             'get'
         );
         Route::add(
-            '/usuarios1',
+            '/trabajadores6',
             function () {
-                $controlador = new \Com\Daw2\Controllers\UsuariosController();
-                $controlador->usuarios1();
+                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador->modificacionTrabajadores();
             },
             'get'
         );

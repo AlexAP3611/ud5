@@ -9,6 +9,10 @@ use Com\Daw2\Core\BaseDbModel;
 class TrabajadoresModel extends BaseDbModel
 {
 
+    private const ORDER_BY = ['username', 'salarioBruto', 'retencionIRPF', 'country_name', 'nombre_rol'];
+    private const DEFAULT_ORDER = 1;
+    private const DEFAULT_PAGE = 1;
+    private const LIMIT = 25;
     private const SELECT_FROM = 'SELECT trabajadores.*, aux_countries.country_name, aux_rol_trabajador.nombre_rol
                 FROM trabajadores
                 LEFT JOIN aux_countries ON aux_countries.id = trabajadores.id_country
@@ -54,17 +58,18 @@ class TrabajadoresModel extends BaseDbModel
         return $stmt->fetchAll();
     }
 
-    public function getByFilters(array $filters, $order = ""): array
+    public function getByFilters(array $filters): array
     {
         $condiciones = [];
         $valores = [];
         $sql = self::SELECT_FROM;
+        //if (!isset($filters['username']) && $filters['username'] !== '') {
         if (!empty($filters['username'])) {
-            $condiciones[] = " username LIKE :username ";
+            $condiciones[] = "username LIKE :username";
             $valores['username'] = "%{$filters['username']}%";
         }
         if (!empty($filters['id_rol'])) {
-            $condiciones[] = " trabajadores.id_rol = :id_rol";
+            $condiciones[] = "trabajadores.id_rol = :id_rol";
             $valores['id_rol'] = $filters['id_rol'];
         }
         if (!empty($filters['min_salario'])) {
@@ -93,17 +98,49 @@ class TrabajadoresModel extends BaseDbModel
             $condiciones[] = "id_country IN (" . implode(', ', $placeholders) . ")";
             $statement = $this->pdo->prepare($sql);
         }
+        $orderInt = $this->getOrderInt($filters);
+        $orderField = self::ORDER_BY[abs($orderInt) - 1] . ($orderInt < 0 ? ' DESC' : '');
         if ($condiciones === []) {
+            $sql .= " ORDER BY $orderField LIMIT " . self::LIMIT;
             $statement = $this->pdo->query($sql);
         } else {
-            $sql .= " WHERE " . implode(' AND ', $condiciones);
+            $sql .= " WHERE " . implode(' AND ', $condiciones) . " ORDER BY $orderField LIMIT " . self::LIMIT . " OFFSET " . $offset;
             $statement = $this->pdo->prepare($sql);
             $statement->execute($valores);
         }
+
         return $statement->fetchAll();
     }
 
-    public function orderByUsername() {
+    public function getOrderInt(array $filters): int
+    {
+        if (
+            empty($filters['order']) || filter_var($filters['order'], FILTER_VALIDATE_INT) === false
+        ) {
+            return self::DEFAULT_ORDER;
+        } else {
+            if (abs((int)$filters['order']) < 1 || abs((int)$filters['order']) > count(self::ORDER_BY)) {
+                return self::DEFAULT_ORDER;
+            } else {
+                return (int)$filters['order'];
+            }
+        }
+    }
 
+    public function getPage(array $filters):int {
+        if (empty($filters['page']) || filter_var($filters['page'], FILTER_VALIDATE_INT) === false) {
+            return self::DEFAULT_PAGE;
+        } else {
+            if ((int)$filters['page'] < 1 || (int)$filters['page'] ) {
+                return self::DEFAULT_PAGE;
+            } else {
+                return (int)$filters['page'];
+            }
+        }
+    }
+
+    public function getTotalPages(array $filters):int {
+        $sql = "SELECT COUNT(*) FROM trabajadores";
+        return 0;
     }
 }

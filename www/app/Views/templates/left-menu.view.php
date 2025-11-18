@@ -56,24 +56,14 @@
                         <p>Trabajadores 5</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="/trabajadores6" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores6' ? 'active' : ''; ?>">
+                        <i class="fas fa-laptop-code nav-icon"></i>
+                        <p>Trabajadores 6</p>
+                    </a>
+                </li>
             </ul>
           </li>
-            <li class="nav-item <?php echo (in_array($_SERVER['REQUEST_URI'], [$_ENV['host.folder'] . 'demo-proveedores'])) ? 'menu-open' : '';?>">
-                <a href="#" class="nav-link">
-                    <i class="nav-icon fas fa-tachometer-alt"></i>
-                    <p>
-                        Ejercicios consultas preparadas
-                        <i class="right fas fa-angle-left"></i>
-                    </p>
-                </a>
-                <ul class="nav nav-treeview">
-                    <li class="nav-item">
-                        <a href="/usuarios1" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Usuarios1' ? 'active' : ''; ?>">
-                            <i class="fas fa-laptop-code nav-icon"></i>
-                            <p>Usuarios 1</p>
-                        </a>
-                    </li>
-            </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

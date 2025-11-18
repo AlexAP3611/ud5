@@ -5,7 +5,7 @@
             <form method="get" action="">
                 <input type="hidden" name="order" value="<?php echo $order; ?>" ?>
                 <div
-                        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Filtros</h6>
                 </div>
                 <!-- Card Body -->
@@ -27,7 +27,7 @@
                                     foreach ($roles as $rol) {
                                         ?>
                                         <option
-                                                value="<?php echo $rol['id_rol'] ?>" <?php echo isset($_GET['id_rol']) && $_GET['id_rol'] == $rol['id_rol'] ? 'selected' : ''; ?>>
+                                            value="<?php echo $rol['id_rol'] ?>" <?php echo isset($_GET['id_rol']) && $_GET['id_rol'] == $rol['id_rol'] ? 'selected' : ''; ?>>
                                             <?php echo ucfirst($rol['nombre_rol']) ?>
                                         </option>
                                         <?php
@@ -91,7 +91,7 @@
     <div class="col-12">
         <div class="card shadow mb-4">
             <div
-                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary"><?php echo $titulo; ?></h6>
             </div>
             <!-- Card Body -->

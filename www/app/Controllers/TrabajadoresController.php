@@ -12,6 +12,36 @@ use Com\Daw2\Models\AuxCountryModel;
 class TrabajadoresController extends BaseController
 {
 
+    public function modifiacionTrabajadores():void
+    {
+        $model = new TrabajadoresModel();
+        $trabajadores = $model->getByFilters($_GET);
+        $auxRolModel = new AuxRolModel();
+        $roles = $auxRolModel->getAll();
+        $countryModel = new AuxCountryModel();
+        $countries = $countryModel->getAll();
+        $copiaGet = $_GET;
+        unset($copiaGet['order']);
+        unset($copiaGet['page']);
+        unset($copiaGet['enviar']);
+
+        $queryParams = http_build_query($copiaGet);
+        $data = [
+            'titulo' => 'Trabajadores Filtros',
+            'breadcumb' => ['Inicio', 'Trabajadores'],
+            'trabajadores' => $trabajadores,
+            'input' => filter_input_array(INPUT_GET),
+            'roles' => $roles,
+            'countries' => $countries,
+            'url' => '/trabajadores?' . $queryParams,
+            'order' => $model->getOrderInt($_GET),
+            'page' => $model->getPage($_GET),
+        ];
+        $this->view->showViews(
+            array('templates/header.view.php', 'trabajadores6.view.php', 'templates/footer.view.php'),
+            $data
+        );
+    }
     public function getByFilters(): void
     {
         $model = new TrabajadoresModel();
@@ -20,13 +50,22 @@ class TrabajadoresController extends BaseController
         $roles = $auxRolModel->getAll();
         $countryModel = new AuxCountryModel();
         $countries = $countryModel->getAll();
+        $copiaGet = $_GET;
+        unset($copiaGet['order']);
+        unset($copiaGet['page']);
+        unset($copiaGet['enviar']);
+
+        $queryParams = http_build_query($copiaGet);
         $data = [
             'titulo' => 'Trabajadores Filtros',
             'breadcumb' => ['Inicio', 'Trabajadores'],
             'trabajadores' => $trabajadores,
             'input' => filter_input_array(INPUT_GET),
             'roles' => $roles,
-            'countries' => $countries
+            'countries' => $countries,
+            'url' => '/trabajadores?' . $queryParams,
+            'order' => $model->getOrderInt($_GET),
+            'page' => $model->getPage($_GET),
         ];
         $this->view->showViews(
             array('templates/header.view.php', 'trabajadores5.view.php', 'templates/footer.view.php'),
