@@ -12,36 +12,50 @@ use Com\Daw2\Models\AuxCountryModel;
 class TrabajadoresController extends BaseController
 {
 
-    public function modifiacionTrabajadores():void
+    public function trabajadores6(): void
     {
         $model = new TrabajadoresModel();
-        $trabajadores = $model->getByFilters($_GET);
-        $auxRolModel = new AuxRolModel();
-        $roles = $auxRolModel->getAll();
-        $countryModel = new AuxCountryModel();
-        $countries = $countryModel->getAll();
-        $copiaGet = $_GET;
-        unset($copiaGet['order']);
-        unset($copiaGet['page']);
-        unset($copiaGet['enviar']);
-
-        $queryParams = http_build_query($copiaGet);
+        $aux_paises = new AuxCountryModel();
+        $aux_rol = new AuxRolModel();
+        $roles = $aux_rol->getAll();
+        $paises = $aux_paises->getAll();
         $data = [
-            'titulo' => 'Trabajadores Filtros',
-            'breadcumb' => ['Inicio', 'Trabajadores'],
-            'trabajadores' => $trabajadores,
-            'input' => filter_input_array(INPUT_GET),
+            'titulo' => 'Página de inicio',
+            'breadcrumb' => ['Inicio'],
+            'seccion' => '/inicio',
+            'paises' => $paises,
             'roles' => $roles,
-            'countries' => $countries,
-            'url' => '/trabajadores?' . $queryParams,
-            'order' => $model->getOrderInt($_GET),
-            'page' => $model->getPage($_GET),
+            'input' => [],
+            'errores' => []
         ];
         $this->view->showViews(
             array('templates/header.view.php', 'trabajadores6.view.php', 'templates/footer.view.php'),
             $data
         );
     }
+    public function doTrabajadores6(): void {
+        $model = new TrabajadoresModel();
+        $aux_paises = new AuxCountryModel();
+        $aux_rol = new AuxRolModel();
+        $roles = $aux_rol->getAll();
+        $paises = $aux_paises->getAll();
+        $datos = $_POST;
+        $errores = $model->insertarTrabajador($datos);
+        $data = [
+            'titulo' => 'Página de inicio',
+            'breadcrumb' => ['Inicio'],
+            'seccion' => '/inicio',
+            'paises' => $paises,
+            'roles' => $roles,
+            'input' => $datos,
+            'errores' => $errores
+        ];
+        $this->view->showViews(
+            array('templates/header.view.php', 'trabajadores6.view.php', 'templates/footer.view.php'),
+            $data
+        );
+    }
+
     public function getByFilters(): void
     {
         $model = new TrabajadoresModel();

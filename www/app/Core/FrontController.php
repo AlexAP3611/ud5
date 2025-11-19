@@ -70,10 +70,18 @@ class FrontController
         Route::add(
             '/trabajadores6',
             function () {
-                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
-                $controlador->modificacionTrabajadores();
+                $controlador = new TrabajadoresController();
+                $controlador->trabajadores6();
             },
             'get'
+        );
+        Route::add(
+            '/trabajadores6',
+            function () {
+                $controlador = new TrabajadoresController();
+                $controlador->doTrabajadores6();
+            },
+            'post'
         );
         Route::pathNotFound(
             function () {
