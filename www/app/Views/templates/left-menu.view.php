@@ -51,17 +51,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/trabajadores5" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores5' ? 'active' : ''; ?>">
+                    <a href="/trabajadores" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores' ? 'active' : ''; ?>">
                         <i class="fas fa-laptop-code nav-icon"></i>
-                        <p>Trabajadores 5</p>
+                        <p>Trabajadores</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="/trabajadores6" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores6' ? 'active' : ''; ?>">
-                        <i class="fas fa-laptop-code nav-icon"></i>
-                        <p>Trabajadores 6</p>
-                    </a>
-                </li>
+
             </ul>
           </li>
         </ul>

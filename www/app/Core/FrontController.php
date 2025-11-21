@@ -60,7 +60,7 @@ class FrontController
             'get'
         );
         Route::add(
-            '/trabajadores5',
+            '/trabajadores',
             function () {
                 $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
                 $controlador->getByFilters();
@@ -68,21 +68,38 @@ class FrontController
             'get'
         );
         Route::add(
-            '/trabajadores6',
+            '/trabajadores/new',
             function () {
                 $controlador = new TrabajadoresController();
-                $controlador->trabajadores6();
+                $controlador->trabajadoresNew();
             },
             'get'
         );
         Route::add(
-            '/trabajadores6',
+            '/trabajadores/new',
             function () {
                 $controlador = new TrabajadoresController();
-                $controlador->doTrabajadores6();
+                $controlador->doTrabajadoresNew();
             },
             'post'
         );
+        Route::add(
+            '/trabajadores/edit',
+            function () {
+                $controlador = new TrabajadoresController();
+                $controlador->trabajadoresEdit();
+            },
+            'get'
+        );
+        Route::add(
+            '/trabajadores/edit',
+            function () {
+                $controlador = new TrabajadoresController();
+                $controlador->doTrabajadoresEdit();
+            },
+            'post'
+        );
+
         Route::pathNotFound(
             function () {
                 $controller = new ErroresController();

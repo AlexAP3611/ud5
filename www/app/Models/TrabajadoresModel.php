@@ -12,6 +12,7 @@ class TrabajadoresModel extends BaseDbModel
     private const ORDER_BY = ['username', 'salarioBruto', 'retencionIRPF', 'country_name', 'nombre_rol'];
     private const DEFAULT_ORDER = 1;
     private const DEFAULT_PAGE = 1;
+    private const ELEMENTS_PER_PAGE = 25;
     private const LIMIT = 25;
     private const SELECT_FROM = 'SELECT trabajadores.*, aux_countries.country_name, aux_rol_trabajador.nombre_rol
                 FROM trabajadores
@@ -21,8 +22,9 @@ class TrabajadoresModel extends BaseDbModel
     //Obtener todos los trabajadores
     public function getAll(): array
     {
-        $sql = "SELECT *
-                FROM trabajadores t;";
+        $sql = "SELECT t.*, cou.country_name, rol.nombre_rol FROM trabajadores t
+                LEFT JOIN aux_countries cou ON t.id_country = cou.id
+                LEFT JOIN aux_rol_trabajador rol ON t.id_rol = rol.id_rol;";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll();
     }
@@ -63,6 +65,8 @@ class TrabajadoresModel extends BaseDbModel
         $condiciones = [];
         $valores = [];
         $sql = self::SELECT_FROM;
+        $page = $this->getPage($filters);
+        $offset = ($page - 1) * (self::ELEMENTS_PER_PAGE);
         //if (!isset($filters['username']) && $filters['username'] !== '') {
         if (!empty($filters['username'])) {
             $condiciones[] = "username LIKE :username";
@@ -169,7 +173,7 @@ class TrabajadoresModel extends BaseDbModel
             $errores['usuario'] = "El nombre de usuario no puede estar vacio";
         } elseif ($this->comprobarNombre($datosTrabajador['username']) === true) {
             $errores['usuario'] = "El nombre de usuario ya se encuentra registrado";
-        } elseif (!preg_match('/^[A-Za-z_0-9]{4,50}$/', $datosTrabajador['username'])) {
+        } elseif (!preg_match('/^[A-Za-z_0-9]+$/', $datosTrabajador['username'])) {
             $errores['usuario'] = 'El nombre de usuario solo puede contener letras, numeros y barrabajas';
         } elseif (strlen($datosTrabajador['username']) < 4) {
             $errores['usuario'] = 'El nombre de usuario debe tener al menos 4 caracteres';
@@ -244,6 +248,17 @@ class TrabajadoresModel extends BaseDbModel
             return false;
         } else {
             return true;
+        }
+    }
+
+    public function find(string $username): false|array
+    {
+        if ($this->comprobarNombre($username) === false) {
+            return false;
+        } else {
+            $sql = $this::SELECT_FROM . " WHERE t.username = :username";
+            $stmt = $this->pdo->execute(['username' => $username]);
+            return $this->pdo->prepare($stmt);
         }
     }
 }

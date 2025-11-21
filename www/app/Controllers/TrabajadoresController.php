@@ -11,47 +11,103 @@ use Com\Daw2\Models\AuxCountryModel;
 
 class TrabajadoresController extends BaseController
 {
-
-    public function trabajadores6(): void
+    public function trabajadoresEdit(): void
     {
         $model = new TrabajadoresModel();
+        $username = $_GET['username'];
+        $usuario = $model->find($username);
         $aux_paises = new AuxCountryModel();
         $aux_rol = new AuxRolModel();
         $roles = $aux_rol->getAll();
         $paises = $aux_paises->getAll();
         $data = [
-            'titulo' => 'Página de inicio',
+            'titulo' => 'Modificacion de trabajador',
             'breadcrumb' => ['Inicio'],
             'seccion' => '/inicio',
             'paises' => $paises,
             'roles' => $roles,
+            'usuario' => $usuario,
+            'url' => '/trabajadores/edit',
             'input' => [],
             'errores' => []
         ];
         $this->view->showViews(
-            array('templates/header.view.php', 'trabajadores6.view.php', 'templates/footer.view.php'),
+            array('templates/header.view.php', 'trabajadores.edit.view.php', 'templates/footer.view.php'),
             $data
         );
     }
-    public function doTrabajadores6(): void {
+    public function doTrabajadoresEdit(): void
+    {
+        $aux_paises = new AuxCountryModel();
+        $aux_rol = new AuxRolModel();
+        $roles = $aux_rol->getAll();
+        $paises = $aux_paises->getAll();
+        $data = [
+            'titulo' => 'Modificacion de trabajador',
+            'breadcrumb' => ['Inicio'],
+            'seccion' => '/inicio',
+            'paises' => $paises,
+            'roles' => $roles,
+            'url' => '/trabajadores/edit',
+            'input' => [],
+            'errores' => []
+        ];
+        $this->view->showViews(
+            array('templates/header.view.php', 'trabajadores.edit.view.php', 'templates/footer.view.php'),
+            $data
+        );
+    }
+    public function trabajadoresNew(): void
+    {
         $model = new TrabajadoresModel();
+        $trabajadores = $model->getAll();
+        $aux_paises = new AuxCountryModel();
+        $aux_rol = new AuxRolModel();
+        $roles = $aux_rol->getAll();
+        $paises = $aux_paises->getAll();
+        $copiaGet = $_GET;
+        $queryParams = http_build_query($copiaGet);
+        $data = [
+            'titulo' => 'Inserción de trabajador',
+            'breadcrumb' => ['Inicio'],
+            'seccion' => '/inicio',
+            'paises' => $paises,
+            'roles' => $roles,
+            'url' => '/trabajadores/new' . $queryParams,
+            'order' => $model->getOrderInt($_GET),
+            'trabajadores' => $trabajadores,
+            'input' => [],
+            'errores' => []
+        ];
+        $this->view->showViews(
+            array('templates/header.view.php', 'trabajadores.new.view.php', 'templates/footer.view.php'),
+            $data
+        );
+    }
+    public function doTrabajadoresNew(): void {
+        $model = new TrabajadoresModel();
+        $trabajadores = $model->getAll();
         $aux_paises = new AuxCountryModel();
         $aux_rol = new AuxRolModel();
         $roles = $aux_rol->getAll();
         $paises = $aux_paises->getAll();
         $datos = $_POST;
+        $queryParams = http_build_query($datos);
         $errores = $model->insertarTrabajador($datos);
         $data = [
-            'titulo' => 'Página de inicio',
+            'titulo' => 'Inserción de trabajador',
             'breadcrumb' => ['Inicio'],
             'seccion' => '/inicio',
             'paises' => $paises,
             'roles' => $roles,
             'input' => $datos,
+            'url' => '/trabajadores/new' . $queryParams,
+            'order' => $model->getOrderInt($_GET),
+            'trabajadores' => $trabajadores,
             'errores' => $errores
         ];
         $this->view->showViews(
-            array('templates/header.view.php', 'trabajadores6.view.php', 'templates/footer.view.php'),
+            array('templates/header.view.php', 'trabajadores.new.view.php', 'templates/footer.view.php'),
             $data
         );
     }
@@ -68,7 +124,6 @@ class TrabajadoresController extends BaseController
         unset($copiaGet['order']);
         unset($copiaGet['page']);
         unset($copiaGet['enviar']);
-
         $queryParams = http_build_query($copiaGet);
         $data = [
             'titulo' => 'Trabajadores Filtros',
@@ -82,7 +137,7 @@ class TrabajadoresController extends BaseController
             'page' => $model->getPage($_GET),
         ];
         $this->view->showViews(
-            array('templates/header.view.php', 'trabajadores5.view.php', 'templates/footer.view.php'),
+            array('templates/header.view.php', 'trabajadores.view.php', 'templates/footer.view.php'),
             $data
         );
     }
