@@ -1,10 +1,11 @@
 <?php
-
+declare(strict_types=1);
 namespace Com\Daw2\Core;
+
 use Com\Daw2\Controllers\ErroresController;
 use Com\Daw2\Controllers\InicioController;
-use Com\Daw2\Controllers\TrabajadoresController;
 use Steampixel\Route;
+use Com\Daw2\Controllers\TrabajadoresController;
 
 class FrontController
 {
@@ -13,7 +14,7 @@ class FrontController
         Route::add(
             '/',
             function () {
-                $controlador = new \Com\Daw2\Controllers\InicioController();
+                $controlador = new InicioController();
                 $controlador->index();
             },
             'get'
@@ -22,7 +23,7 @@ class FrontController
         Route::add(
             '/demo-proveedores',
             function () {
-                $controlador = new \Com\Daw2\Controllers\InicioController();
+                $controlador = new InicioController();
                 $controlador->demo();
             },
             'get'
@@ -30,7 +31,7 @@ class FrontController
         Route::add(
             '/trabajadores1',
             function () {
-                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador = new TrabajadoresController();
                 $controlador->trabajadores1();
             },
             'get'
@@ -38,7 +39,7 @@ class FrontController
         Route::add(
             '/trabajadores2',
             function () {
-                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador = new TrabajadoresController();
                 $controlador->trabajadores2();
             },
             'get'
@@ -46,7 +47,7 @@ class FrontController
         Route::add(
             '/trabajadores3',
             function () {
-                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador = new TrabajadoresController();
                 $controlador->trabajadores3();
             },
             'get'
@@ -54,7 +55,7 @@ class FrontController
         Route::add(
             '/trabajadores4',
             function () {
-                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
+                $controlador = new TrabajadoresController();
                 $controlador->trabajadores4();
             },
             'get'
@@ -62,8 +63,8 @@ class FrontController
         Route::add(
             '/trabajadores',
             function () {
-                $controlador = new \Com\Daw2\Controllers\TrabajadoresController();
-                $controlador->getByFilters();
+                $controlador = new TrabajadoresController();
+                $controlador->trabajadores();
             },
             'get'
         );
@@ -84,21 +85,30 @@ class FrontController
             'post'
         );
         Route::add(
-            '/trabajadores/edit',
-            function () {
+            '/trabajadores/edit/(\w{4,50})',
+            function ($username) {
                 $controlador = new TrabajadoresController();
-                $controlador->trabajadoresEdit();
+                $controlador->trabajadoresEdit($username);
             },
             'get'
         );
         Route::add(
-            '/trabajadores/edit',
-            function () {
+            '/trabajadores/edit/(\w{4,50})',
+            function ($username) {
                 $controlador = new TrabajadoresController();
-                $controlador->doTrabajadoresEdit();
+                $controlador->doTrabajadoresEdit($username);
             },
             'post'
         );
+        Route::add(
+            '/trabajadores/delete/(\w{4,50})',
+            function ($username) {
+                $controlador = new TrabajadoresController();
+                $controlador->trabajadoresDelete($username);
+            },
+            'get'
+        );
+
 
         Route::pathNotFound(
             function () {
@@ -113,6 +123,9 @@ class FrontController
                 $controller->error405();
             }
         );
+        //CAMBIO DE: Route::run($_ENV['host.folder']);
+        //A Route::run();
         Route::run($_ENV['host.folder']);
+
     }
 }

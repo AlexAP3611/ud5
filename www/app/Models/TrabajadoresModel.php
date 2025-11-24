@@ -8,7 +8,6 @@ use Com\Daw2\Core\BaseDbModel;
 
 class TrabajadoresModel extends BaseDbModel
 {
-
     private const ORDER_BY = ['username', 'salarioBruto', 'retencionIRPF', 'country_name', 'nombre_rol'];
     private const DEFAULT_ORDER = 1;
     private const DEFAULT_PAGE = 1;
@@ -18,79 +17,62 @@ class TrabajadoresModel extends BaseDbModel
                 FROM trabajadores
                 LEFT JOIN aux_countries ON aux_countries.id = trabajadores.id_country
                 LEFT JOIN aux_rol_trabajador ON aux_rol_trabajador.id_rol = trabajadores.id_rol';
-
-    //Obtener todos los trabajadores
-    public function getAll(): array
+    public function getTrabajadores(): array
     {
-        $sql = "SELECT t.*, cou.country_name, rol.nombre_rol FROM trabajadores t
-                LEFT JOIN aux_countries cou ON t.id_country = cou.id
-                LEFT JOIN aux_rol_trabajador rol ON t.id_rol = rol.id_rol;";
-        $stmt = $this->pdo->query($sql);
-        return $stmt->fetchAll();
-    }
-
-    //Obtener los trabajadores ordenados por salarioBruto de mayor salario a menor
-    public function getByGrossSalary(): array
-    {
-        $sql = "SELECT *
-               FROM trabajadores t
-               ORDER BY salarioBruto DESC;";
-        $stmt = $this->pdo->query($sql);
-        return $stmt->fetchAll();
-    }
-
-    //Obtener todos los trabajadores que sean standard
-    public function getByRolStandard(): array
-    {
-        $sql = "SELECT *
+        $sql = "SELECT t.username, t.salarioBruto, t.retencionIRPF, t.activo, art.nombre_rol, cou.country_name  
                 FROM trabajadores t
-                INNER JOIN aux_rol_trabajador art ON t.id_rol = art.id_rol
-                WHERE art.nombre_rol = 'standard';";
+                LEFT JOIN ud5.aux_rol_trabajador art on t.id_rol = art.id_rol
+                LEFT JOIN ud5.aux_countries cou on cou.id = t.id_country;";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll();
     }
 
-    //Obtener todos los trabajadores cuyo username comience por Carlos
-    public function getByCarlos(): array
+    public function getTrabajadoresSalary(): array
     {
-        $sql = "SELECT * 
+        $sql = "SELECT t.username, t.salarioBruto, t.retencionIRPF, t.activo, art.nombre_rol, cou.country_name  
                 FROM trabajadores t
+                LEFT JOIN ud5.aux_rol_trabajador art on t.id_rol = art.id_rol
+                LEFT JOIN ud5.aux_countries cou on cou.id = t.id_country
+                ORDER BY t.salarioBruto DESC;";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
+    public function getTrabajadoresStandard(): array
+    {
+        $sql = "SELECT t.username, t.salarioBruto, t.retencionIRPF, t.activo, art.nombre_rol, cou.country_name  
+                FROM trabajadores t
+                LEFT JOIN ud5.aux_rol_trabajador art on t.id_rol = art.id_rol
+                LEFT JOIN ud5.aux_countries cou on cou.id = t.id_country
+                WHERE t.id_rol = 5;";
+        $stmt = $this->pdo->query($sql);
+        return $stmt->fetchAll();
+    }
+    public function getTrabajadoresCarlos(): array
+    {
+        $sql = "SELECT t.username, t.salarioBruto, t.retencionIRPF, t.activo, art.nombre_rol, cou.country_name  
+                FROM trabajadores t
+                LEFT JOIN ud5.aux_rol_trabajador art on t.id_rol = art.id_rol
+                LEFT JOIN ud5.aux_countries cou on cou.id = t.id_country
                 WHERE t.username LIKE 'Carlos%';";
         $stmt = $this->pdo->query($sql);
         return $stmt->fetchAll();
     }
 
-    public function getByFilters(array $filters): array
+    public function getTrabajadoresFilters(array $filters): array
     {
         $condiciones = [];
         $valores = [];
-        $sql = self::SELECT_FROM;
-        $page = $this->getPage($filters);
-        $offset = ($page - 1) * (self::ELEMENTS_PER_PAGE);
-        //if (!isset($filters['username']) && $filters['username'] !== '') {
+        $sql = "SELECT t.username, t.salarioBruto, t.retencionIRPF, t.activo, art.nombre_rol, cou.country_name  
+                FROM trabajadores t
+                LEFT JOIN ud5.aux_rol_trabajador art on t.id_rol = art.id_rol
+                LEFT JOIN ud5.aux_countries cou on cou.id = t.id_country";
         if (!empty($filters['username'])) {
-            $condiciones[] = "username LIKE :username";
-            $valores['username'] = "%{$filters['username']}%";
+            $condiciones[] = " t.username LIKE :username ";
+            $valores['username'] = "%" . $filters['username'] . "%";
         }
-        if (!empty($filters['id_rol'])) {
-            $condiciones[] = "trabajadores.id_rol = :id_rol";
-            $valores['id_rol'] = $filters['id_rol'];
-        }
-        if (!empty($filters['min_salario'])) {
-            $condiciones[] = "trabajadores.salarioBruto >= :min_salario";
-            $valores['min_salario'] = $filters['min_salario'];
-        }
-        if (!empty($filters['max_salario'])) {
-            $condiciones[] = "trabajadores.salarioBruto <= :max_salario";
-            $valores['max_salario'] = $filters['max_salario'];
-        }
-        if (!empty($filters['min_irpf'])) {
-            $condiciones[] = "trabajadores.retencionIRPF >= :min_irpf";
-            $valores['min_irpf'] = $filters['min_irpf'];
-        }
-        if (!empty($filters['max_irpf'])) {
-            $condiciones[] = "trabajadores.retencionIRPF <= :max_irpf";
-            $valores['max_irpf'] = $filters['max_irpf'];
+        if (!empty($filters['rol'])) {
+            $condiciones[] = "art.nombre_rol = :rol";
+            $valores['rol'] = $filters['rol'];
         }
         if (!empty($filters['countries'])) {
             $i = 1;
@@ -99,81 +81,70 @@ class TrabajadoresModel extends BaseDbModel
                 $valores["country$i"] = $country;
                 $i++;
             }
-            $condiciones[] = "id_country IN (" . implode(', ', $placeholders) . ")";
+            $condiciones[] = "cou.id IN (" . implode(', ', $placeholders) . ")";
             $statement = $this->pdo->prepare($sql);
         }
-        $orderInt = $this->getOrderInt($filters);
-        $orderField = self::ORDER_BY[abs($orderInt) - 1] . ($orderInt < 0 ? ' DESC' : '');
-        if ($condiciones === []) {
-            $sql .= " ORDER BY $orderField LIMIT " . self::LIMIT;
-            $statement = $this->pdo->query($sql);
-        } else {
-            $sql .= " WHERE " . implode(' AND ', $condiciones) . " ORDER BY $orderField LIMIT " . self::LIMIT . " OFFSET " . $offset;
-            $statement = $this->pdo->prepare($sql);
-            $statement->execute($valores);
+        if (!empty($filters['salario-maximo']) && !empty($filters['salario-minimo'])) {
+            $condiciones[] = " t.salarioBruto >= :salarioMinimo AND t.salarioBruto <= :salarioMaximo ";
+            $valores['salarioMinimo'] = $filters['salario-minimo'];
+            $valores['salarioMaximo'] = $filters['salario-maximo'];
         }
-
-        return $statement->fetchAll();
-    }
-
-    public function getOrderInt(array $filters): int
-    {
-        if (
-            empty($filters['order']) || filter_var($filters['order'], FILTER_VALIDATE_INT) === false
-        ) {
-            return self::DEFAULT_ORDER;
-        } else {
-            if (abs((int)$filters['order']) < 1 || abs((int)$filters['order']) > count(self::ORDER_BY)) {
-                return self::DEFAULT_ORDER;
-            } else {
-                return (int)$filters['order'];
-            }
+        if (!empty($filters['salario-minimo'])) {
+            $condiciones[] = " t.salarioBruto >= :salarioMinimo ";
+            $valores['salarioMinimo'] = $filters['salario-minimo'];
         }
-    }
-
-    public function getPage(array $filters):int {
-        if (empty($filters['page']) || filter_var($filters['page'], FILTER_VALIDATE_INT) === false) {
-            return self::DEFAULT_PAGE;
+        if (!empty($filters['salario-maximo'])) {
+            $condiciones[] = "t.salarioBruto <= :salarioMaximo";
+            $valores['salarioMaximo'] = $filters['salario-maximo'];
+        }
+        if (!empty($filters['irpf-maximo']) && !empty($filters['irpf-minimo'])) {
+            $condiciones[] = " t.retencionIRPF >= :irpfMinimo AND t.retencionIRPF <= :irpfMaximo ";
+            $valores['irpfMinimo'] = $filters['irpf-minimo'];
+            $valores['irpfMaximo'] = $filters['irpf-maximo'];
+        }
+        if (!empty($filters['irpf-maximo'])) {
+            $condiciones[] = " t.retencionIRPF <= :irpfMaximo ";
+            $valores['irpfMaximo'] = $filters['irpf-maximo'];
+        }
+        if (!empty($filters['irpf-minimo'])) {
+            $condiciones[] = " t.retencionIRPF >= :irpfMinimo ";
+            $valores['irpfMinimo'] = $filters['irpf-minimo'];
+        }
+        if (count($condiciones) === 0) {
+            $stmt = $this->pdo->query($sql);
+            return $stmt->fetchAll();
         } else {
-            if ((int)$filters['page'] < 1 || (int)$filters['page'] ) {
-                return self::DEFAULT_PAGE;
-            } else {
-                return (int)$filters['page'];
-            }
+            $sql .= " WHERE " . implode(" AND ", $condiciones);
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute($valores);
+            return $stmt->fetchAll();
         }
     }
-
-    public function getTotalPages(array $filters):int {
-        $sql = "SELECT COUNT(*) FROM trabajadores";
-        return 0;
-    }
-
     public function insertarTrabajador($datosTrabajador): ?array
     {
         $errores = $this->comprobarTrabajador($datosTrabajador);
         if (empty($errores)) {
-            $sql = "INSERT INTO trabajadores (username, salarioBruto, retencionIRPF, activo, id_rol, id_country) 
-                    VALUES(:username, :salario, :irpf, :estado, :rol, :pais)";
+            $sql = "INSERT INTO trabajadores VALUES(:username, :salario, :irpf, :estado, :rol, :country)";
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute([
-                ':username' => $datosTrabajador['username'],
-                ':salario'  => $datosTrabajador['salario'],
-                ':irpf'     => $datosTrabajador['irpf'],
-                ':estado'   => $datosTrabajador['estado'],
-                ':rol'      => $datosTrabajador['rol'],
-                ':pais'     => $datosTrabajador['pais']
+            ':username' => $datosTrabajador['username'],
+            ':salario' => $datosTrabajador['salario'],
+            ':irpf' => $datosTrabajador['irpf'],
+            ':estado' => $datosTrabajador['estado'],
+            ':rol' => $datosTrabajador['rol'],
+            ':country' => $datosTrabajador['country']
             ]);
         }
-            return $errores;
+        return $errores;
     }
-    private function comprobarTrabajador($datosTrabajador): array
+    private function comprobarTrabajador(array $datosTrabajador): array
     {
         $errores = [];
         if (empty($datosTrabajador['username'])) {
             $errores['usuario'] = "El nombre de usuario no puede estar vacio";
-        } elseif ($this->comprobarNombre($datosTrabajador['username']) === true) {
+        } elseif ($this->find($datosTrabajador['username']) !== false) {
             $errores['usuario'] = "El nombre de usuario ya se encuentra registrado";
-        } elseif (!preg_match('/^[A-Za-z_0-9]+$/', $datosTrabajador['username'])) {
+        } elseif (!preg_match('/^[A-Za-z_0-9]{4,50}$/', $datosTrabajador['username'])) {
             $errores['usuario'] = 'El nombre de usuario solo puede contener letras, numeros y barrabajas';
         } elseif (strlen($datosTrabajador['username']) < 4) {
             $errores['usuario'] = 'El nombre de usuario debe tener al menos 4 caracteres';
@@ -198,7 +169,7 @@ class TrabajadoresModel extends BaseDbModel
         }
         if ($datosTrabajador['estado'] === '') {
             $errores['estado'] = "El estado no puede estar vacio";
-        } elseif ($datosTrabajador['estado'] !== '0' && $datosTrabajador['estado'] !== '1') {
+        } elseif ($datosTrabajador['estado'] !== '1' && $datosTrabajador['estado'] !== '0') {
             $errores['estado'] = "El estado solo puede ser activo o inactivo";
         }
         if (empty($datosTrabajador['rol'])) {
@@ -208,24 +179,12 @@ class TrabajadoresModel extends BaseDbModel
         } elseif ($this->comprobarRol($datosTrabajador['rol']) === false) {
             $errores['rol'] = "El rol especificado no existe";
         }
-        if ($datosTrabajador['pais'] === '') {
-            $errores['pais'] = "El pais no puede estar vacio";
-        } elseif ($this->comprobarPais($datosTrabajador['pais']) === false) {
-            $errores['pais'] = "El pais es invalido";
+        if (empty($datosTrabajador['country'])) {
+            $errores['country'] = "El pais no puede estar vacio";
+        } elseif ($this->comprobarPais($datosTrabajador['country']) === false) {
+            $errores['country'] = "El pais es invalido";
         }
         return $errores;
-    }
-
-    private function comprobarNombre($nombreUsuario): bool
-    {
-        $sql = "SELECT t.username FROM trabajadores t WHERE username = :username";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute(['username' => $nombreUsuario]);
-        if ($stmt->fetch() === false) {
-            return false;
-        } else {
-            return true;
-        }
     }
 
     private function comprobarRol($rol): bool
@@ -251,14 +210,48 @@ class TrabajadoresModel extends BaseDbModel
         }
     }
 
-    public function find(string $username): false|array
-    {
-        if ($this->comprobarNombre($username) === false) {
+    public function find(string $username): array|false {
+        $sql  = self::SELECT_FROM . " WHERE username = :username";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['username' => $username]);
+        $resultado = $stmt->fetch();
+        if ($resultado === false) {
             return false;
-        } else {
-            $sql = $this::SELECT_FROM . " WHERE t.username = :username";
-            $stmt = $this->pdo->execute(['username' => $username]);
-            return $this->pdo->prepare($stmt);
         }
+        return $resultado;
+    }
+
+    public function borrarTrabajador(string $username): bool
+    {
+            $sql = "DELETE FROM trabajadores WHERE username = :username";
+            $stmt = $this->pdo->prepare($sql);
+            if ($stmt->execute(['username' => $username])) {
+
+            }
+
+    }
+
+    public function modificarTrabajador(array $trabajador): array
+    {
+        $errores = $this->comprobarTrabajador($trabajador);
+        if (empty($errores)) {
+            $sql = "UPDATE trabajadores t SET 
+                    t.salarioBruto = :salario,
+                    t.retencionIRPF = :irpf,
+                    t.activo = :estado,
+                    t.id_rol = :rol,
+                    t.id_country = :pais
+                    WHERE t.username = :username;";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([
+                'salario' => $trabajador['salario'],
+                'irpf' => $trabajador['irpf'],
+                'estado' => $trabajador['estado'],
+                'rol' => $trabajador['rol'],
+                'pais' => $trabajador['pais'],
+                'username' => $trabajador['username']
+            ]);
+        }
+        return $errores;
     }
 }

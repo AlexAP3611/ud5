@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Com\Daw2\Controllers;
 
-use Com\Daw2\Core\BaseController;
-
-class ErroresController extends BaseController
+class ErroresController extends \Com\Daw2\Core\BaseController
 {
     public function error404(): void
     {

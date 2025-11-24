@@ -27,36 +27,35 @@
                 </a>
               </li>
                 <li class="nav-item">
-                    <a href="/trabajadores1" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores1' ? 'active' : ''; ?>">
+                    <a href="<?php echo $_ENV['host.folder'] ?>trabajadores1" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === $_ENV['host.folder'] . 'trabajadores1' ? 'active' : ''; ?>">
                         <i class="fas fa-laptop-code nav-icon"></i>
                         <p>Trabajadores 1</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/trabajadores2" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores2' ? 'active' : ''; ?>">
+                    <a href="<?php echo $_ENV['host.folder'] ?>trabajadores2" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === $_ENV['host.folder'] . 'trabajadores2' ? 'active' : ''; ?>">
                         <i class="fas fa-laptop-code nav-icon"></i>
                         <p>Trabajadores 2</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/trabajadores3" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores3' ? 'active' : ''; ?>">
+                    <a href="<?php echo $_ENV['host.folder'] ?>trabajadores3" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === $_ENV['host.folder'] . 'trabajadores3' ? 'active' : ''; ?>">
                         <i class="fas fa-laptop-code nav-icon"></i>
                         <p>Trabajadores 3</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/trabajadores4" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores4' ? 'active' : ''; ?>">
+                    <a href="<?php echo $_ENV['host.folder'] ?>trabajadores4" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === $_ENV['host.folder'] . 'trabajadores4' ? 'active' : ''; ?>">
                         <i class="fas fa-laptop-code nav-icon"></i>
                         <p>Trabajadores 4</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/trabajadores" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === 'Trabajadores' ? 'active' : ''; ?>">
+                    <a href="<?php echo $_ENV['host.folder'] ?>trabajadores" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === $_ENV['host.folder'] . 'trabajadores' ? 'active' : ''; ?>">
                         <i class="fas fa-laptop-code nav-icon"></i>
                         <p>Trabajadores</p>
                     </a>
                 </li>
-
             </ul>
           </li>
         </ul>
