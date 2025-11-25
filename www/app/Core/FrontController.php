@@ -11,6 +11,7 @@ class FrontController
 {
     public static function main(): void
     {
+        session_start();
         Route::add(
             '/',
             function () {
@@ -108,7 +109,22 @@ class FrontController
             },
             'get'
         );
-
+        Route::add(
+            '/nombreUsuarioSesion',
+            function () {
+                $controlador = new TrabajadoresController();
+                $controlador->nombreUsuarioSesion();
+            },
+            'get'
+        );
+        Route::add(
+            '/nombreUsuarioSesion',
+            function () {
+                $controlador = new TrabajadoresController();
+                $controlador->doNombreUsuarioSesion();
+            },
+            'post'
+        );
 
         Route::pathNotFound(
             function () {

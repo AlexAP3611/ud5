@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 ?>
 <!--Inicio HTML -->
-<div class="row  <?php echo (isset($_GET['tema']) && $_GET['tema'] == 'oscuro') ? "dark-mode" : ''?>">
+<div class="row">
     <div class="col-12">
         <div class="card shadow mb-4">
             <form method="get" action="">
@@ -70,7 +70,7 @@ declare(strict_types=1);
                                             <option value="<?php echo $pais['id']; ?>">
                                                 <?php echo $pais['country_name'];?>
                                             </option>
-                                        <?php } ?>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
@@ -86,15 +86,16 @@ declare(strict_types=1);
                 </div>
                 <div class="col-12 col-lg-3">
                     <div class="mb-3">
-                        <label for="tema">Rol:</label>
+                        <label for="tema">Tema:</label>
                         <select name="tema" id="tema" class="form-control">
-                            <option value="claro"
-                            <?php echo (isset($_GET['tema']) && $_GET['tema'] == 'claro') ?? 'selected' ?>>Claro</option>
-                            <option value="oscuro"
-                            <?php echo (isset($_GET['tema']) && $_GET['tema'] == 'oscuro') ?? 'selected' ?>>Oscuro</option>
+                            <option value="Claro"
+                            <?= (isset($_COOKIE['tema']) && $_COOKIE['tema'] == 'Claro') ? 'selected' : ''?>>Claro</option>
+                            <option value="Oscuro"
+                            <?= (isset($_COOKIE['tema']) && $_COOKIE['tema'] == 'Oscuro') ? 'selected' : ''?>>Oscuro</option>
                         </select>
                     </div>
                 </div>
+                <input type="submit" value="Aplicar" name="aplicar_tema" class="btn btn-primary ml-2"/>
             </form>
         </div>
     </div>

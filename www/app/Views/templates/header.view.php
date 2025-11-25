@@ -30,10 +30,25 @@
   <link rel="stylesheet" href="plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+
+<!-- MODIFICADO PARA QUE GUARDE EL TEMA USADO POR EL USUARIO,SI LA COOKIE 'tema' DE LA VARIABLE GLOBAL $_COOKIE EXISTE
+Y ES DE VALOR 'oscuro' ENTONCES AÑADE dark-mode A LA CLASE DEL BODY-->
+<body class="hold-transition sidebar-mini layout-fixed <?php
+if (isset($_COOKIE['tema']) && $_COOKIE['tema'] === 'Oscuro') {
+    echo 'dark-mode';
+}
+?>">
 <div class="wrapper"> 
   <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- SI 'tema' EXISTE Y ES DE VALOR 'oscuro' AÑADE A LA CLASE DEL NAV 'navbar-dark, SI NO EXISTE O NO ES 'oscuro',
+    ENTONCES AÑADE EL VALOR 'navbar-white navbar-light'-->
+    <nav class="main-header navbar navbar-expand <?php
+    if (isset($_COOKIE['tema']) && $_COOKIE['tema'] === 'Oscuro') {
+        echo 'navbar-dark';
+    } else {
+        echo 'navbar-white navbar-light';
+    }
+    ?>">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -74,7 +89,7 @@
           <img src="assets/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Usuario</a>
+          <a href="#" class="d-block"><?= isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Usuario' ?></a>
         </div>
       </div>
      <?php 

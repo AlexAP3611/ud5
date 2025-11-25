@@ -225,15 +225,12 @@ class TrabajadoresModel extends BaseDbModel
     {
             $sql = "DELETE FROM trabajadores WHERE username = :username";
             $stmt = $this->pdo->prepare($sql);
-            if ($stmt->execute(['username' => $username])) {
-
-            }
-
+            return $stmt->execute(['username' => $username]);
     }
 
     public function modificarTrabajador(array $trabajador): array
     {
-        $errores = $this->comprobarTrabajador($trabajador);
+        $errores = $this->comprobarTrabajadorEditar($trabajador);
         if (empty($errores)) {
             $sql = "UPDATE trabajadores t SET 
                     t.salarioBruto = :salario,
@@ -251,6 +248,52 @@ class TrabajadoresModel extends BaseDbModel
                 'pais' => $trabajador['pais'],
                 'username' => $trabajador['username']
             ]);
+        }
+        return $errores;
+    }
+
+    private function comprobarTrabajadorEditar(array $datosTrabajador): array
+    {
+        $errores = [];
+        if (empty($datosTrabajador['username'])) {
+            $errores['usuario'] = "El nombre de usuario no puede estar vacio";
+        } elseif (!preg_match('/^[A-Za-z_0-9]{4,50}$/', $datosTrabajador['username'])) {
+            $errores['usuario'] = 'El nombre de usuario solo puede contener letras, numeros y barrabajas';
+        } elseif (strlen($datosTrabajador['username']) < 4) {
+            $errores['usuario'] = 'El nombre de usuario debe tener al menos 4 caracteres';
+        } elseif (strlen($datosTrabajador['username']) > 50) {
+            $errores['usuario'] = "El nombre de usuario no puede contener mas de 50 caracteres";
+        }
+        if (empty($datosTrabajador['salario'])) {
+            $errores['salario'] = "El salario no puede estar vacio";
+        } elseif (filter_var($datosTrabajador['salario'], FILTER_SANITIZE_NUMBER_FLOAT) === false) {
+            $errores['salario'] = "El salario es invalido";
+        } elseif ($datosTrabajador['salario'] < 500) {
+            $errores['salario'] = "El salario tien que ser por lo menos de 500";
+        }
+        if ($datosTrabajador['irpf'] === '' || $datosTrabajador['irpf'] === null) {
+            $errores['irpf'] = "El IRPF no puede estar vacio";
+        } elseif (filter_var($datosTrabajador['irpf'], FILTER_SANITIZE_NUMBER_INT) === false) {
+            $errores['irpf'] = "El IRPF es invalido";
+        } elseif ($datosTrabajador['irpf'] < 0) {
+            $errores['irpf'] = "El IRPF no puede ser negativo";
+        } elseif ($datosTrabajador['irpf'] > 100) {
+            $errores['irpf'] = "El IRPF no puede ser mayor que 100";
+        }
+        if ($datosTrabajador['estado'] === '') {
+            $errores['estado'] = "El estado no puede estar vacio";
+        } elseif ($datosTrabajador['estado'] !== '1' && $datosTrabajador['estado'] !== '0') {
+            $errores['estado'] = "El estado solo puede ser activo o inactivo";
+        }
+        if (empty($datosTrabajador['rol'])) {
+            $errores['rol'] = "El rol no puede estar vacio";
+        } elseif ($this->comprobarRol($datosTrabajador['rol']) === false) {
+            $errores['rol'] = "El rol especificado no existe";
+        }
+        if (empty($datosTrabajador['pais'])) {
+            $errores['pais'] = "El pais no puede estar vacio";
+        } elseif ($this->comprobarPais($datosTrabajador['pais']) === false) {
+            $errores['pais'] = "El pais es invalido";
         }
         return $errores;
     }

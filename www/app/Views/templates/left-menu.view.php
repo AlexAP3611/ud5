@@ -56,6 +56,12 @@
                         <p>Trabajadores</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="<?php echo $_ENV['host.folder'] ?>nombreUsuarioSesion" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === $_ENV['host.folder'] . 'nombreUsuarioSesion' ? 'active' : ''; ?>">
+                        <i class="fas fa-laptop-code nav-icon"></i>
+                        <p>Nombre usuario sesion</p>
+                    </a>
+                </li>
             </ul>
           </li>
         </ul>

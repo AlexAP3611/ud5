@@ -76,7 +76,10 @@ class TrabajadoresController extends \Com\Daw2\Core\BaseController
     }
     public function trabajadores(): void
     {
-        setrawcookie('tema', isset($_GET['tema']) ? $_GET['tema'] : 'claro');
+        if (isset($_GET['tema'])) {
+            setcookie('tema', $_GET['tema'], time() + 999999 * 2);
+            $_COOKIE['tema'] = $_GET['tema'];
+        }
         $model = new TrabajadoresModel();
         $trabajadores = $model->getTrabajadoresFilters($_GET);
         $aux_paises = new Aux_paises();
@@ -191,5 +194,23 @@ class TrabajadoresController extends \Com\Daw2\Core\BaseController
         $model = new TrabajadoresModel();
         $model ->borrarTrabajador($username);
         header('location: /trabajadores');
+    }
+
+    public function nombreUsuarioSesion(): void {
+        $data = [];
+        $this->view->showViews(
+            array('templates/header.view.php', 'nombreUsuarioSesion.view.php', 'templates/footer.view.php'),
+            $data
+        );
+    }
+    public function doNombreUsuarioSesion(): void {
+        if (isset($_POST['nombre'])) {
+            $_SESSION['nombre'] = $_POST['nombre'];
+        }
+        $data = [];
+        $this->view->showViews(
+            array('templates/header.view.php', 'nombreUsuarioSesion.view.php', 'templates/footer.view.php'),
+            $data
+        );
     }
 }
