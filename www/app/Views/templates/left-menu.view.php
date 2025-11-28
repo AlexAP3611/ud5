@@ -62,6 +62,12 @@
                         <p>Nombre usuario sesion</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="<?php echo $_ENV['host.folder'] ?>login" class="nav-link <?php echo $_SERVER['REQUEST_URI'] === $_ENV['host.folder'] . 'login' ? 'active' : ''; ?>">
+                        <i class="fas fa-laptop-code nav-icon"></i>
+                        <p>Login</p>
+                    </a>
+                </li>
             </ul>
           </li>
         </ul>

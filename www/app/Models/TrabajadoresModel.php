@@ -297,4 +297,26 @@ class TrabajadoresModel extends BaseDbModel
         }
         return $errores;
     }
+
+    public function checkErroresLogin(array $datos): array {
+        $errores = [];
+        $sql = "SELECT * FROM usuario_sistema u WHERE u.email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['email' => $datos['email']]);
+        $usuario = $stmt->fetch();
+        if (empty($usuario)) {
+            $errores['usuario'] = "Fallo en la autenticacion";
+            return $errores;
+        } elseif (!password_verify($datos['password'], $usuario['pass'])) {
+                $errores['password'] = "Fallo en la autenticacion";
+            }
+            return $errores;
+    }
+
+    public function login(array $datos): array {
+        $sql = "SELECT * FROM usuario_sistema u WHERE u.email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['email' => $datos['email']]);
+        return $stmt->fetch();
+    }
 }

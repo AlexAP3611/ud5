@@ -213,4 +213,30 @@ class TrabajadoresController extends \Com\Daw2\Core\BaseController
             $data
         );
     }
+
+    public function login(): void
+    {
+        $data = ['titulo' => 'Login'];
+        $this->view->showViews(array('login.view.php'), $data);
+    }
+
+    public function doLogin(): void
+    {
+        $datos = filter_input_array(INPUT_POST);
+        $model = new TrabajadoresModel();
+        $errores = $model->checkErroresLogin($datos);
+        if (empty($errores)) {
+            $usuario = $model->login($datos);
+            $data = [
+                'usuario' => $usuario
+            ];
+            unset($usuario['pass']);
+            $_SESSION = $usuario;
+        } else {
+        $data = [
+            'errores' => $errores
+        ];
+    }
+        $this->view->showViews(array('login.view.php'), $data);
+    }
 }
